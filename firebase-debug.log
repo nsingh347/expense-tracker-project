@@ -1,0 +1,10 @@
+[debug] [2025-07-01T05:50:07.665Z] ----------------------------------------------------------------------
+[debug] [2025-07-01T05:50:07.667Z] Command:       /usr/local/bin/node /usr/local/bin/firebase login --debug
+[debug] [2025-07-01T05:50:07.667Z] CLI Version:   14.9.0
+[debug] [2025-07-01T05:50:07.668Z] Platform:      darwin
+[debug] [2025-07-01T05:50:07.668Z] Node Version:  v22.17.0
+[debug] [2025-07-01T05:50:07.668Z] Time:          Tue Jul 01 2025 11:20:07 GMT+0530 (India Standard Time)
+[debug] [2025-07-01T05:50:07.668Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-01T05:50:07.669Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] Already logged in as nsingh347@gmail.com
