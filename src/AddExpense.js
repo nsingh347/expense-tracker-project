@@ -11,7 +11,7 @@ function AddExpense() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!amount || !description) {
+    if (!amount || !description || !category) {
       alert("Please fill all fields");
       return;
     }
@@ -44,6 +44,7 @@ function AddExpense() {
         onChange={(e) => setAmount(e.target.value)}
         required
       /><br /><br />
+
       <input
         type="text"
         placeholder="Description"
@@ -51,18 +52,21 @@ function AddExpense() {
         onChange={(e) => setDescription(e.target.value)}
         required
       /><br /><br />
+
       <select value={paidBy} onChange={(e) => setPaidBy(e.target.value)}>
         <option value="Nishant">Nishant</option>
         <option value="Rajat">Rajat</option>
       </select><br /><br />
+
+      {/* ✅ Category Dropdown */}
       <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-        <option value="">Select Category</option>
+        <option value="">-- Select Category --</option>
         <option value="Groceries">Groceries</option>
         <option value="Outside Food">Outside Food</option>
-        <option value="Transport">Transport</option>
-        <option value="Entertainment">Entertainment</option>
+        <option value="Meat">Meat</option>
         <option value="Other">Other</option>
       </select><br /><br />
+
       <button type="submit">Add Expense</button>
     </form>
   );
