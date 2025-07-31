@@ -6,6 +6,7 @@ function AddExpense() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [paidBy, setPaidBy] = useState("Nishant");
+  const [category, setCategory] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,12 +21,14 @@ function AddExpense() {
         amount: parseFloat(amount),
         description,
         paidBy,
+        category,
         date: new Date().toISOString()
       });
 
       setAmount("");
       setDescription("");
       setPaidBy("Nishant");
+      setCategory("");
     } catch (error) {
       console.error("Error adding document: ", error);
     }
@@ -51,6 +54,14 @@ function AddExpense() {
       <select value={paidBy} onChange={(e) => setPaidBy(e.target.value)}>
         <option value="Nishant">Nishant</option>
         <option value="Rajat">Rajat</option>
+      </select><br /><br />
+      <select value={category} onChange={(e) => setCategory(e.target.value)} required>
+        <option value="">Select Category</option>
+        <option value="Groceries">Groceries</option>
+        <option value="Outside Food">Outside Food</option>
+        <option value="Transport">Transport</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Other">Other</option>
       </select><br /><br />
       <button type="submit">Add Expense</button>
     </form>

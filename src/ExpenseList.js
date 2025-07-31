@@ -8,6 +8,7 @@ function ExpenseList() {
     description: "",
     amount: "",
     paidBy: "",
+    category: "",
     date: ""
   });
 
@@ -45,14 +46,20 @@ function ExpenseList() {
       const descriptionMatch = expense.description?.toLowerCase().includes(filters.description.toLowerCase());
       const amountMatch = expense.amount?.toString().includes(filters.amount);
       const paidByMatch = expense.paidBy?.toLowerCase().includes(filters.paidBy.toLowerCase());
+      const categoryMatch = expense.category?.toLowerCase().includes(filters.category.toLowerCase());
       
       let dateMatch = true;
       if (filters.date) {
-        const expenseDate = new Date(expense.date).toLocaleDateString();
-        dateMatch = expenseDate.includes(filters.date);
+        try {
+          const expenseDate = new Date(expense.date).toLocaleDateString();
+          dateMatch = expenseDate.includes(filters.date);
+        } catch (error) {
+          // If date parsing fails, skip date filtering
+          dateMatch = true;
+        }
       }
 
-      return descriptionMatch && amountMatch && paidByMatch && dateMatch;
+      return descriptionMatch && amountMatch && paidByMatch && categoryMatch && dateMatch;
     });
   }, [expenses, filters]);
 
@@ -61,6 +68,7 @@ function ExpenseList() {
       description: "",
       amount: "",
       paidBy: "",
+      category: "",
       date: ""
     });
   };
@@ -108,6 +116,21 @@ function ExpenseList() {
             </select>
           </div>
           <div>
+            <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Category:</label>
+            <select
+              value={filters.category}
+              onChange={(e) => handleFilterChange("category", e.target.value)}
+              style={{ width: "100%", padding: "8px", border: "1px solid #ddd", borderRadius: "4px" }}
+            >
+              <option value="">All</option>
+              <option value="Groceries">Groceries</option>
+              <option value="Outside Food">Outside Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
             <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Date:</label>
             <input
               type="date"
@@ -145,6 +168,7 @@ function ExpenseList() {
                 <th style={{ padding: "12px", border: "1px solid #dee2e6" }}>Description</th>
                 <th style={{ padding: "12px", border: "1px solid #dee2e6" }}>Amount (₹)</th>
                 <th style={{ padding: "12px", border: "1px solid #dee2e6" }}>Paid By</th>
+                <th style={{ padding: "12px", border: "1px solid #dee2e6" }}>Category</th>
                 <th style={{ padding: "12px", border: "1px solid #dee2e6" }}>Date</th>
                 <th style={{ padding: "12px", border: "1px solid #dee2e6" }}>Action</th>
               </tr>
@@ -155,8 +179,19 @@ function ExpenseList() {
                   <td style={{ padding: "12px", border: "1px solid #dee2e6" }}>{exp.description}</td>
                   <td style={{ padding: "12px", border: "1px solid #dee2e6" }}>₹{exp.amount?.toFixed(2)}</td>
                   <td style={{ padding: "12px", border: "1px solid #dee2e6" }}>{exp.paidBy}</td>
+                  <td style={{ padding: "12px", border: "1px solid #dee2e6" }}>{exp.category || "No category"}</td>
                   <td style={{ padding: "12px", border: "1px solid #dee2e6" }}>
-                    {new Date(exp.date).toLocaleDateString()} {new Date(exp.date).toLocaleTimeString()}
+                    {(() => {
+                      try {
+                        const date = new Date(exp.date);
+                        if (isNaN(date.getTime())) {
+                          return "No date";
+                        }
+                        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+                      } catch (error) {
+                        return "No date";
+                      }
+                    })()}
                   </td>
                   <td style={{ padding: "12px", border: "1px solid #dee2e6" }}>
                     <button 
@@ -178,7 +213,7 @@ function ExpenseList() {
               <tr style={{ backgroundColor: "#f8f9fa", fontWeight: "bold" }}>
                 <td style={{ padding: "12px", border: "1px solid #dee2e6" }}>Total</td>
                 <td style={{ padding: "12px", border: "1px solid #dee2e6" }}>₹{totalAmount.toFixed(2)}</td>
-                <td style={{ padding: "12px", border: "1px solid #dee2e6" }} colSpan="3"></td>
+                <td style={{ padding: "12px", border: "1px solid #dee2e6" }} colSpan="4"></td>
               </tr>
             </tbody>
           </table>
