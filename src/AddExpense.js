@@ -22,7 +22,7 @@ function AddExpense() {
         description,
         paidBy,
         category,
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
       });
 
       setAmount("");
@@ -35,41 +35,94 @@ function AddExpense() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ margin: "20px" }}>
-      <h2>Add Expense</h2>
-      <input
-        type="number"
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        required
-      /><br /><br />
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "80vh",
+        padding: "20px",
+      }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          width: "320px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px",
+          border: "1px solid #ccc",
+          borderRadius: "8px",
+          padding: "20px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          backgroundColor: "#fff",
+        }}
+      >
+        <h2 style={{ textAlign: "center" }}>Add Expense</h2>
 
-      <input
-        type="text"
-        placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        required
-      /><br /><br />
+        <input
+          type="number"
+          placeholder="Amount"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          required
+          style={inputStyle}
+        />
 
-      <select value={paidBy} onChange={(e) => setPaidBy(e.target.value)}>
-        <option value="Nishant">Nishant</option>
-        <option value="Rajat">Rajat</option>
-      </select><br /><br />
+        <input
+          type="text"
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+          style={inputStyle}
+        />
 
-      {/* ✅ Category Dropdown */}
-      <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-        <option value="">-- Select Category --</option>
-        <option value="Groceries">Groceries</option>
-        <option value="Outside Food">Outside Food</option>
-        <option value="Meat">Meat</option>
-        <option value="Other">Other</option>
-      </select><br /><br />
+        <select
+          value={paidBy}
+          onChange={(e) => setPaidBy(e.target.value)}
+          style={inputStyle}
+        >
+          <option value="Nishant">Nishant</option>
+          <option value="Rajat">Rajat</option>
+        </select>
 
-      <button type="submit">Add Expense</button>
-    </form>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+          style={inputStyle}
+        >
+          <option value="">-- Select Category --</option>
+          <option value="Groceries">Groceries</option>
+          <option value="Outside Food">Outside Food</option>
+          <option value="Meat">Meat</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <button type="submit" style={buttonStyle}>
+          Add Expense
+        </button>
+      </form>
+    </div>
   );
 }
+
+const inputStyle = {
+  padding: "8px",
+  fontSize: "1em",
+  borderRadius: "4px",
+  border: "1px solid #ccc",
+};
+
+const buttonStyle = {
+  padding: "10px",
+  fontSize: "1em",
+  borderRadius: "4px",
+  border: "none",
+  backgroundColor: "#007bff",
+  color: "#fff",
+  cursor: "pointer",
+};
 
 export default AddExpense;
