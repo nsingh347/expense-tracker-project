@@ -25,6 +25,11 @@ const ExpenseList = () => {
   const [filterAmount, setFilterAmount] = useState("");
   const [filterPaidBy, setFilterPaidBy] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
+  // Add month filter state
+  const [filterMonth, setFilterMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  });
 
   // Editing state: track which expense is editing
   const [editId, setEditId] = useState(null);
@@ -91,14 +96,25 @@ const ExpenseList = () => {
   // Filter logic
   const filteredExpenses = useMemo(() => {
     return expenses.filter((exp) => {
+      // Date filter
+      let dateMatch = true;
+      if (filterMonth) {
+        const expDate = new Date(exp.date);
+        const expMonth = `${expDate.getFullYear()}-${String(expDate.getMonth() + 1).padStart(2, "0")}`;
+        dateMatch = expMonth === filterMonth;
+      }
       return (
         exp.description.toLowerCase().includes(filterDescription.toLowerCase()) &&
         (filterAmount === "" || exp.amount.toString().startsWith(filterAmount)) &&
         (filterPaidBy === "" || exp.paidBy === filterPaidBy) &&
-        (filterCategory === "" || exp.category === filterCategory)
+        (filterCategory === "" || exp.category === filterCategory) &&
+        dateMatch
       );
     });
-  }, [expenses, filterDescription, filterAmount, filterPaidBy, filterCategory]);
+  }, [expenses, filterDescription, filterAmount, filterPaidBy, filterCategory, filterMonth]);
+
+  // Calculate total for filtered month
+  const totalForMonth = filteredExpenses.reduce((sum, exp) => sum + (exp.amount || 0), 0);
 
   // Pie chart data
   const contributionData = useMemo(() => {
@@ -121,7 +137,17 @@ const ExpenseList = () => {
   return (
     <div style={{ marginTop: "20px" }}>
       <h2>Expense List</h2>
-
+      {/* Month filter */}
+      <div style={{ marginBottom: "10px" }}>
+        <label style={{ fontWeight: "bold", marginRight: 8 }}>Month:</label>
+        <input
+          type="month"
+          value={filterMonth}
+          onChange={e => setFilterMonth(e.target.value)}
+          style={{ padding: "6px 8px", fontSize: "1em", borderRadius: "4px", border: "1px solid #ccc" }}
+        />
+        <span style={{ marginLeft: 16, fontWeight: "bold" }}>Total: ₹{totalForMonth.toFixed(2)}</span>
+      </div>
       {/* Filters container */}
       <div style={filtersContainerStyle}>
         <input
@@ -232,6 +258,7 @@ const ExpenseList = () => {
             <th style={thStyle}>Amount (₹)</th>
             <th style={thStyle}>Paid By</th>
             <th style={thStyle}>Category</th>
+            <th style={thStyle}>Date</th>
             <th style={thStyle}>Action</th>
           </tr>
         </thead>
@@ -284,6 +311,15 @@ const ExpenseList = () => {
                     </select>
                   </td>
                   <td style={tdStyle}>
+                    <input
+                      type="date"
+                      name="date"
+                      value={editData.date}
+                      onChange={handleEditChange}
+                      style={editInputStyle}
+                    />
+                  </td>
+                  <td style={tdStyle}>
                     <button
                       onClick={saveEdit}
                       style={{ ...actionButtonStyle, backgroundColor: "#28a745" }}
@@ -304,6 +340,15 @@ const ExpenseList = () => {
                   <td style={tdStyle}>₹{exp.amount?.toFixed(2)}</td>
                   <td style={tdStyle}>{exp.paidBy}</td>
                   <td style={tdStyle}>{exp.category || "No category"}</td>
+                  <td style={tdStyle}>{(() => {
+                    try {
+                      const date = new Date(exp.date);
+                      if (isNaN(date.getTime())) return "No date";
+                      return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+                    } catch {
+                      return "No date";
+                    }
+                  })()}</td>
                   <td style={tdStyle}>
                     <button
                       onClick={() => startEditing(exp)}
@@ -323,7 +368,7 @@ const ExpenseList = () => {
             )
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: "center", padding: "12px" }}>
+              <td colSpan="6" style={{ textAlign: "center", padding: "12px" }}>
                 No expenses found.
               </td>
             </tr>
