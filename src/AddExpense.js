@@ -85,6 +85,7 @@ function AddExpense() {
         >
           <option value="Nishant">Nishant</option>
           <option value="Rajat">Rajat</option>
+          <option value="Rahul">Rahul</option>
         </select>
 
         <select
