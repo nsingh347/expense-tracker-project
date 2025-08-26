@@ -14,11 +14,13 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 function ExpenseChart() {
   const [nishantTotal, setNishantTotal] = useState(0);
   const [rajatTotal, setRajatTotal] = useState(0);
+  const [rahulTotal, setRahulTotal] = useState(0);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "expenses"), (snapshot) => {
       let nishant = 0;
       let rajat = 0;
+      let rahul = 0;
 
       snapshot.forEach((doc) => {
         const data = doc.data();
@@ -26,23 +28,26 @@ function ExpenseChart() {
           nishant += data.amount;
         } else if (data.paidBy === "Rajat") {
           rajat += data.amount;
+        } else if (data.paidBy === "Rahul") {
+          rahul += data.amount;
         }
       });
 
       setNishantTotal(nishant);
       setRajatTotal(rajat);
+      setRahulTotal(rahul);
     });
 
     return () => unsubscribe();
   }, []);
 
   const data = {
-    labels: ["Nishant", "Rajat"],
+    labels: ["Nishant", "Rajat", "Rahul"],
     datasets: [
       {
-        data: [nishantTotal, rajatTotal],
-        backgroundColor: ["#36A2EB", "#FF6384"],
-        hoverBackgroundColor: ["#36A2EB", "#FF6384"]
+        data: [nishantTotal, rajatTotal, rahulTotal],
+        backgroundColor: ["#36A2EB", "#FF6384", "#4BC0C0"],
+        hoverBackgroundColor: ["#36A2EB", "#FF6384", "#4BC0C0"]
       }
     ]
   };
