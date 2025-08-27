@@ -24,6 +24,23 @@ function ExpenseChart() {
 
       snapshot.forEach((doc) => {
         const data = doc.data();
+
+        // ✅ Convert Firestore timestamp to JS Date
+        let expenseDate = null;
+        if (data.date && data.date.toDate) {
+          expenseDate = data.date.toDate();
+        }
+
+        // ✅ Format date if needed (e.g., "July")
+        const monthName = expenseDate
+          ? expenseDate.toLocaleString("default", { month: "long" })
+          : "Unknown";
+
+        console.log("Expense:", {
+          ...data,
+          formattedMonth: monthName
+        });
+
         if (data.paidBy === "Nishant") {
           nishant += data.amount;
         } else if (data.paidBy === "Rajat") {
